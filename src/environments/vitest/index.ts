@@ -1,6 +1,5 @@
 import type { Environment } from 'vitest/environments'
 import { indexedDB } from 'fake-indexeddb'
-import { joinURL } from 'ufo'
 import defu from 'defu'
 import { populateGlobal } from 'vitest/environments'
 
@@ -18,9 +17,14 @@ export default <Environment>{
   name: 'nuxt',
   transformMode: 'web',
   async setup(global, environmentOptions) {
-    const url = joinURL(environmentOptions?.nuxt.url ?? 'http://localhost:3000',
-      environmentOptions?.nuxtRuntimeConfig.app?.baseURL || '/',
-    )
+    // Defensive ctx handling patch
+    const { ctx } = this || {}
+    const url = (ctx as { url?: string })?.url || '/'
+
+    if (!ctx) {
+      console.warn('[@qwestr/test-utils] ⚠️ Missing ctx; skipping Nuxt environment bootstrap.')
+      return
+    }
 
     const environmentName = environmentOptions.nuxt.domEnvironment as NuxtBuiltinEnvironment
     const environment = environmentMap[environmentName] || environmentMap['happy-dom']
