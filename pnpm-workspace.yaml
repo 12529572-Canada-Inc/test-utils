@@ -1,4 +1,2 @@
 packages:
-  - "examples/*"
-  - "examples/module/playground"
-  - "stubs/*"
+  - .
