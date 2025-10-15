@@ -3,6 +3,7 @@ import { defineBuildConfig } from 'unbuild'
 const isStub = process.argv.includes('--stub')
 
 export default defineBuildConfig({
+  failOnWarn: false, // ✅ don't crash on warnings
   declaration: 'node16',
   entries: [
     'src/e2e',
